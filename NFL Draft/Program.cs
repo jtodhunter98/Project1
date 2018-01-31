@@ -35,54 +35,95 @@ namespace NFL_Draft
                 {22900300, 19000590, 18000222, 12999999, 10000100 },
                 {23000000, 20000000, 19400000, 16200700, 15900000 }
             };
+
+            int draftPosition, draftPlayer, bank, numberOfPlayers;//selected position, player, and user's amount of money
             
-            //loop to display players
-            
-            for (var x = 0; x < players.GetLength(0); x++)
+            bank = 95000000;//starting money
+            numberOfPlayers = 1;
+
+            bool sentinel;
+            sentinel = true;
+            while (sentinel)
             {
+                Console.WriteLine("Welcome to the NFL Draft!");
+
+                for (var x = 0; x < players.GetLength(0); x++)//loop to display players
+                {
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.Write($"{position[x]}" + " (" + (x + 1) + ")");
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.WriteLine("\n");
+                    for (var y = 0; y < players.GetLength(1); y++)
+                    {
+                        Console.Write($"{x + 1}{y + 1}) {players[x, y]}  ");
+                    }
+                    Console.WriteLine("\n");
+                    for (var z = 0; z < salary.GetLength(1); z++)
+                    {
+                        Console.Write($"      ${salary[x, z]}");
+                    }
+
+                    Console.WriteLine(" \n");
+                }//end of loop
+
+                Console.WriteLine("You may draft up to five players. (" + (6 - numberOfPlayers) + " picks left)");                       
+                Console.WriteLine("Enter the number of the position you want to draft for.");
+                Console.WriteLine("Bank: $" + (bank));
+                draftPosition = Int32.Parse(Console.ReadLine());
+
+                Console.Clear();
+
                 Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Write($"{position[x]}" + " (" + (x+1) + ")");
+                Console.WriteLine("You are drafting for a " + position[draftPosition - 1]);
+                Console.WriteLine("Enter the number of the player you want to draft");
                 Console.BackgroundColor = ConsoleColor.Black;
-                Console.WriteLine("\n");
-                for(var y = 0; y < players.GetLength(1); y++)
+
+                for (var x = 0; x < 5; x++)//display players of the selected position
                 {
-                    Console.Write($"{x + 1}{y + 1}) {players[x, y]}  ");
-                }
-                Console.WriteLine("\n");
-                for(var z = 0; z < salary.GetLength(1); z++)
-                {
-                    Console.Write($"      ${salary[x, z]}");
-                }
+                    Console.WriteLine($" {x + 1}) {players[draftPosition - 1, x]}  ${salary[draftPosition - 1, x]}");
+                }//end of display position loop
+
+                draftPlayer = Int32.Parse(Console.ReadLine());
+                bank = bank - salary[draftPosition - 1, draftPlayer - 1];
+                numberOfPlayers = numberOfPlayers + 1;
                 
-                Console.WriteLine(" \n");
-            }//end of loop
-            
-            int draftPosition;//user select position
-            int draftPlayer;//user select player
-            int bank;//users available money
-            bank = 95000000;
 
-            Console.WriteLine("Enter the number of the position you want to draft for");
-            draftPosition = Int32.Parse(Console.ReadLine());
+                Console.Clear();
 
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.WriteLine("You are drafting for a " + position[draftPosition - 1]);
-            Console.WriteLine("Enter the number of the player you want to draft");
-            Console.BackgroundColor = ConsoleColor.Black;
+                //check amount of money
+                if (bank < 0)
+                {
+                    Console.WriteLine("You do not have enough money to draft this player");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("You have drafted " + (players[draftPosition - 1, draftPlayer - 1]));
+                    if (numberOfPlayers > 5)
+                    {
+                        Console.WriteLine("You have drafted the maximum amount of players");
+                        break;
+                    }
+                    Console.WriteLine("You now have $" + (bank) + " left to spend");
+                    Console.WriteLine("Would you like to draft another player? (Y/N)");
+                    string nextDraft = Console.ReadLine().ToUpper();
+                    if (nextDraft == "Y")
+                    {
+                        sentinel = true;
+                    }
+                    else
+                    {
+                        sentinel = false;
+                    }
+                }
 
-            for (var x = 0; x < 5; x++)//display players of the selected position
-            {
-                Console.WriteLine($" {x + 1}) {players[draftPosition - 1, x]}  ${salary[draftPosition - 1, x]}");
-            }//end of display position loop
-            
-            draftPlayer = Int32.Parse(Console.ReadLine());
-            bank = bank - salary[draftPosition-1,draftPlayer-1];
+                Console.Clear();
 
-            Console.WriteLine("You have drafted " + (players[draftPosition - 1, draftPlayer - 1]));
-            Console.WriteLine("You now have $" + (bank) + " left to spend");
-            Console.WriteLine("Would you like to draft another player? (Y/N)");
-
-                Console.ReadLine();
+                
+            }
+            Console.WriteLine("Thank you for using this program.");
+            Console.WriteLine("(Press enter to close program)");
+            Console.ReadLine();
         }//end of main
     }
 }
