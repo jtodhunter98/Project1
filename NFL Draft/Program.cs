@@ -8,8 +8,9 @@ namespace NFL_Draft
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            
             string[,] players =
             {
                 {"Mason Rudolph","Lamar Jackson","Josh Rosen","Sam Darnold","Baker Mayfield" },
@@ -36,57 +37,52 @@ namespace NFL_Draft
                 {23000000, 20000000, 19400000, 16200700, 15900000 }
             };
 
-            int draftPosition, draftPlayer, bank, numberOfPlayers;//selected position, player, and user's amount of money
+            int draftPosition, draftPlayer, bank, numberOfPlayers, pickedPlayer;//selected position, player, and user's amount of money
+            bool sentinel;
             
             bank = 95000000;//starting money
             numberOfPlayers = 1;
+            pickedPlayer = 0;
+            string[] roster = new string[5];
 
-            bool sentinel;
             sentinel = true;
             while (sentinel)
             {
-                Console.WriteLine("Welcome to the NFL Draft!");
+                //Calling the method
+                renderSchedule(ref players, ref position, ref salary);
 
-                for (var x = 0; x < players.GetLength(0); x++)//loop to display players
-                {
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                    Console.Write($"{position[x]}" + " (" + (x + 1) + ")");
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.WriteLine("\n");
-                    for (var y = 0; y < players.GetLength(1); y++)
-                    {
-                        Console.Write($"{x + 1}{y + 1}) {players[x, y]}  ");
-                    }
-                    Console.WriteLine("\n");
-                    for (var z = 0; z < salary.GetLength(1); z++)
-                    {
-                        Console.Write($"      ${salary[x, z]}");
-                    }
 
-                    Console.WriteLine(" \n");
-                }//end of loop
-
-                Console.WriteLine("You may draft up to five players. (" + (6 - numberOfPlayers) + " picks left)");                       
-                Console.WriteLine("Enter the number of the position you want to draft for.");
+                Console.WriteLine("You may draft up to five players. (" + (6 - numberOfPlayers) + " picks left)");
                 Console.WriteLine("Bank: $" + (bank));
+                Console.WriteLine("Enter the number of the position you want to draft for.");
+                
                 draftPosition = Int32.Parse(Console.ReadLine());
+                if (draftPosition > 8)
+                {
+                    Console.WriteLine("That is not an option, please enter a number 1-8.");
+                    Console.WriteLine("Press enter to try again.");
+                    Console.ReadLine();
+                    Main();
+                }
 
                 Console.Clear();
 
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.WriteLine("You are drafting for a " + position[draftPosition - 1]);
-                Console.WriteLine("Enter the number of the player you want to draft");
                 Console.BackgroundColor = ConsoleColor.Black;
-
+                Console.WriteLine("Enter the number of the player you want to draft");
+                
                 for (var x = 0; x < 5; x++)//display players of the selected position
                 {
                     Console.WriteLine($" {x + 1}) {players[draftPosition - 1, x]}  ${salary[draftPosition - 1, x]}");
                 }//end of display position loop
 
                 draftPlayer = Int32.Parse(Console.ReadLine());
+                
                 bank = bank - salary[draftPosition - 1, draftPlayer - 1];
                 numberOfPlayers = numberOfPlayers + 1;
-                
+                roster[pickedPlayer] = players[draftPosition - 1, draftPlayer - 1];
+                pickedPlayer = pickedPlayer + 1;
 
                 Console.Clear();
 
@@ -99,6 +95,7 @@ namespace NFL_Draft
                 else
                 {
                     Console.WriteLine("You have drafted " + (players[draftPosition - 1, draftPlayer - 1]));
+                                                      
                     if (numberOfPlayers > 5)
                     {
                         Console.WriteLine("You have drafted the maximum amount of players");
@@ -120,10 +117,47 @@ namespace NFL_Draft
                 Console.Clear();
 
                 
+
+                
             }
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Roster");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine();
+            for (var x = 0; x < roster.GetLength(0); x++)
+            {
+                Console.WriteLine($"{roster[x]}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Money spent: $" + (95000000 - bank));
             Console.WriteLine("Thank you for using this program.");
             Console.WriteLine("(Press enter to close program)");
             Console.ReadLine();
         }//end of main
+
+        //Defining the method
+        public static void renderSchedule(ref string[ , ] players, ref string[]position, ref int[ , ]salary)
+        {
+            Console.WriteLine("Welcome to the NFL Draft!");
+
+            for (var x = 0; x < players.GetLength(0); x++)//loop to display players
+            {
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.Write($"{position[x]}" + " (" + (x + 1) + ")");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine("\n");
+                for (var y = 0; y < players.GetLength(1); y++)
+                {
+                    Console.Write($"{x + 1}{y + 1}) {players[x, y]}  ");
+                }
+                Console.WriteLine("\n");
+                for (var z = 0; z < salary.GetLength(1); z++)
+                {
+                    Console.Write($"      ${salary[x, z]}");
+                }
+
+                Console.WriteLine(" \n");
+            }//end of loop
+        }
     }
 }
