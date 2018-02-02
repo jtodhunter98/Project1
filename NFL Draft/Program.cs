@@ -10,6 +10,8 @@ namespace NFL_Draft
     {
         static void Main()
         {
+            string[] position = { "Quarterback", "Running Back", "Wide Receiver", "Defensive Lineman", "Defensive Back", "Tight End", "Line Backer", "Offensive Tackle" };
+
             string[,] players =
             {
                 {"Mason Rudolph","Lamar Jackson","Josh Rosen","Sam Darnold","Baker Mayfield" },
@@ -22,7 +24,17 @@ namespace NFL_Draft
                 {"Orlando Brown","Kolton Miller","Chukwuma Okorafor","Connor Williams","Mike McGlinchey" }
             };
 
-            string[] position = { "Quarterback", "Running Back", "Wide Receiver", "Defensive Lineman", "Defensive Back", "Tight End", "Line Backer", "Offensive Tackle" };
+            string[,] institution =
+            {
+                {"Oklahoma State","Louisvlille","UCLA","Southern California","Oklahoma" },
+                {"Penn State","LSU","Stanford","Southern California","Alabama" },
+                {"Southern Methodist","Oklahoma State","Oklahoma State","Memphis","Alabama" },
+                {"Michigan","Washington","Florida","Alabama","Stanford" },
+                {"Iowa","Florida State","Ohio State","Alabama","Colorado" },
+                {"Oklahoma","So. Dakota State","NC State","Penn State","Wisconsin" },
+                {"Georgia","Virginia Tech","Clemson","Clemson","Texas" },
+                {"Oklahoma","UCLA","Western Michigan","Texas","Notre Dame" }
+            };
 
             int[,] salary =
             {
@@ -49,7 +61,7 @@ namespace NFL_Draft
             {
                 restoreOne://restore point if user does not successfully select position (1-8)
 
-                renderPlayers(ref players, ref position, ref salary);
+                renderPlayers(ref players, ref position, ref salary, ref institution);
                 Console.WriteLine();
                 draftInfo(ref numberOfPlayers, ref bank);
                 draftPosition = userInputPosition();//user selects position to draft for
@@ -115,35 +127,43 @@ namespace NFL_Draft
         }//end of Main
         
         //Defining renderPlayers
-        public static void renderPlayers(ref string[,] players, ref string[] position, ref int[,] salary)
+        public static void renderPlayers(ref string[,] players, ref string[] position, ref int[,] salary, ref string [,] institution)
         {
             Console.WriteLine("Welcome to the NFL Draft!");
             Console.WriteLine();
 
 
             string spacing = " ";
-            int spacingVar = 20;
+            int spacingVar = 22;
             
 
-            for (var x = 0; x < players.GetLength(0); x++)//loop to display players
+            for (var x = 0; x < players.GetLength(0); x++)//loop to display players, positions, instutitions and salary
             {
                 Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Write($"{position[x]}" + " (" + (x + 1) + ")");
+                Console.Write($"{position[x]}" + " (" + (x + 1) + ")");//display positions
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine();
 
-                for (var y = 0; y < players.GetLength(1); y++)
+                for (var y = 0; y < players.GetLength(1); y++)//display players loop
                 {
                     string specificPlayer = players[x, y];
                     int adjustedVar = spacingVar - specificPlayer.Length;
                     string separate = String.Concat(Enumerable.Repeat(spacing, adjustedVar));
                     Console.Write($" {players[x, y]}{separate} ");
                 }
-                Console.WriteLine();
-                for (var z = 0; z < salary.GetLength(1); z++)
+                
+                for (var a = 0; a < institution.GetLength(1); a++)//display institution loop
                 {
-                    Console.Write($" ${salary[x, z]}            ");                    
+                    string specificInstitution = institution[x, a];
+                    int adjustedVar = spacingVar - specificInstitution.Length;
+                    string separate = String.Concat(Enumerable.Repeat(spacing, adjustedVar));
+                    Console.Write($" {institution[x, a]}{separate} ");
                 }
+                
+                for (var z = 0; z < salary.GetLength(1); z++)//display salary loop
+                {
+                    Console.Write($" ${salary[x, z]}              ");                    
+                }                
                 Console.WriteLine();
                 Console.WriteLine();
             }//end of display loop
