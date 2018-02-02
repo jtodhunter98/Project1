@@ -59,17 +59,24 @@ namespace NFL_Draft
 
             while (sentinel)
             {
-                restoreOne://restore point if user does not successfully select position (1-8)
+                restoreOne://restore point if user does not successfully select position (1-8) or does not choose to view roster (9)
 
                 renderPlayers(ref players, ref position, ref salary, ref institution);
                 Console.WriteLine();
                 draftInfo(ref numberOfPlayers, ref bank);
                 draftPosition = userInputPosition();//user selects position to draft for
                 Console.Clear();
-
-                if (draftPosition > 8)
+                if (draftPosition == 9)
                 {
-                    Console.WriteLine("That is not an option, please enter a number 1-8.");
+                    rosterInfo(ref roster, ref bank);
+                    Console.WriteLine();
+                    returnToDraft();
+                    Console.Clear();
+                    goto restoreOne;
+                }
+                if (draftPosition > 9)
+                {
+                    Console.WriteLine("That is not an option, please enter a number 1-8, or enter 9 to view roster.");
                     Console.WriteLine("Press enter to try again.");
                     Console.ReadLine();
                     goto restoreOne;
@@ -81,6 +88,10 @@ namespace NFL_Draft
                 draftPlayer = userInputPlayer(ref bank);
                 Console.Clear();
 
+                if (draftPlayer == 0)
+                {
+                    goto restoreOne;
+                }
                 if (draftPlayer > 5)
                 {
                     Console.WriteLine("That is not an option, please enter a number 1-5.");
@@ -124,6 +135,8 @@ namespace NFL_Draft
 
             Console.Clear();
             rosterInfo(ref roster, ref bank);
+            Console.WriteLine();
+            endMessage();
         }//end of Main
         
         //Defining renderPlayers
@@ -173,6 +186,7 @@ namespace NFL_Draft
         public static void draftInfo(ref int numberOfPlayers, ref int bank)
         {
             Console.WriteLine("You may draft up to five players. (" + (6 - numberOfPlayers) + " picks left)");
+            Console.WriteLine("Enter '9' to view your current roster");
             Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Bank: $" + (bank));
             Console.BackgroundColor = ConsoleColor.Black;
@@ -191,8 +205,9 @@ namespace NFL_Draft
         public static void renderSelectedPosition(ref string[,] players, ref string[] position, ref int[,] salary, ref int draftPosition)
         {
             Console.BackgroundColor = ConsoleColor.Blue;
-            Console.WriteLine("You are drafting for a " + position[draftPosition - 1]);
+            Console.WriteLine("You are drafting for a " + position[draftPosition - 1]);            
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("Enter '0' to return to position selection.");
 
             for (var x = 0; x < 5; x++)//display players of the selected position
             {
@@ -206,7 +221,7 @@ namespace NFL_Draft
             Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Bank: $" + bank);
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("Enter the number of the player you want to draft");
             return Int32.Parse(Console.ReadLine());
         }//end of userInputPlayer
@@ -249,7 +264,7 @@ namespace NFL_Draft
             return Console.ReadLine().ToUpper();
         }//end of nextDraft
         
-        //defining endInfo
+        //defining rosterInfo
         public static void rosterInfo(ref string [] roster, ref int bank)
         {
             Console.BackgroundColor = ConsoleColor.Blue;
@@ -261,12 +276,23 @@ namespace NFL_Draft
                 Console.WriteLine($"{roster[x]}");
             }
             Console.WriteLine();
-            Console.WriteLine("Money spent: $" + (95000000 - bank));
+            Console.WriteLine("Money spent: $" + (95000000 - bank));            
+        }
+
+        //defining returnToDraft
+        public static void returnToDraft()
+        {
+            Console.WriteLine("Press 'enter' to return to the draft.");
+            Console.ReadLine();
+        }//end of returnToDraft
+
+        //defining endMessage
+        public static void endMessage()
+        {
             Console.WriteLine();
             Console.WriteLine("(Press enter to close program)");
             Console.ReadLine();
-        }
-        
+        }//end of endMessage
 
         
 
