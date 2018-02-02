@@ -43,7 +43,6 @@ namespace NFL_Draft
             numberOfPlayers = 1;//counter to limit how many players the user can draft
             rosterVar = 0;//counter to add drafted players to the roster (list)
             string[] roster = new string[5];
-
             sentinel = true;
 
             while (sentinel)
@@ -69,6 +68,15 @@ namespace NFL_Draft
                 renderSelectedPosition(ref players, ref position, ref salary, ref draftPosition);//player selection screen
                 draftPlayer = userInputPlayer(ref bank);
                 Console.Clear();
+
+                if (draftPlayer > 5)
+                {
+                    Console.WriteLine("That is not an option, please enter a number 1-5.");
+                    Console.WriteLine("Press enter to try again.");
+                    Console.ReadLine();
+                    Console.Clear();
+                    goto restoreTwo;
+                }
                 updateBank(ref bank, ref salary, ref draftPosition, ref draftPlayer);
                 updatePlayerLimit(ref numberOfPlayers);
                 addToRoster(ref roster, ref rosterVar, ref players, ref draftPosition, ref draftPlayer);
@@ -78,7 +86,8 @@ namespace NFL_Draft
                     Console.WriteLine("You do not have enough money to draft this player.");
                     Console.WriteLine("Press enter to draft a different player.");
                     Console.ReadLine();
-                    goto restoreTwo;                    
+                    bankRefund(ref bank, ref salary, ref draftPosition, ref draftPlayer);
+                    goto restoreOne;                    
                 }
                 if (numberOfPlayers > 5)// check for maximum amount of players
                 {
@@ -88,9 +97,7 @@ namespace NFL_Draft
                     break;
                 }
 
-                confirmDraft(ref players, ref draftPosition, ref draftPlayer, ref bank);
-
-                
+                confirmDraft(ref players, ref draftPosition, ref draftPlayer, ref bank);               
 
                 string decision = nextDraft();
                 if (decision == "Y")
@@ -146,7 +153,10 @@ namespace NFL_Draft
         public static void draftInfo(ref int numberOfPlayers, ref int bank)
         {
             Console.WriteLine("You may draft up to five players. (" + (6 - numberOfPlayers) + " picks left)");
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Bank: $" + (bank));
+            Console.BackgroundColor = ConsoleColor.Black;
+            
         }//end of draftInfo
 
         //defining userInputPosition
@@ -174,16 +184,23 @@ namespace NFL_Draft
         public static int userInputPlayer(ref int bank)
         {
             Console.WriteLine();
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Bank: $" + bank);
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Enter the number of the player you want to draft");
             return Int32.Parse(Console.ReadLine());
         }//end of userInputPlayer
 
         //defining updateBank
-        public static void updateBank(ref int bank, ref int[,] salary, ref int draftPosition, ref int draftPlayer)
-        {
-            bank = bank - salary[draftPosition - 1, draftPlayer - 1];
+        public static void updateBank(ref int bank, ref int [ , ] salary, ref int draftPosition, ref int draftPlayer)
+        {            
+            bank = bank - salary[draftPosition - 1, draftPlayer - 1];           
         }//end of updateBank
+
+        public static void bankRefund(ref int bank, ref int [ , ] salary, ref int draftPosition, ref int draftPlayer)
+        {
+            bank = bank + salary[draftPosition - 1, draftPlayer - 1];            
+        }
 
         //defining updatePlayerLimit
         public static void updatePlayerLimit(ref int numberOfPlayers)
